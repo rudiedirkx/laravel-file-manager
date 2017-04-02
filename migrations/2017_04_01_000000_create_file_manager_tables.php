@@ -12,7 +12,7 @@ class CreateFileManagerTables extends Migration {
 	public function up() {
 		Schema::create('files', function(Blueprint $table) {
 			$table->increments('id');
-            $table->string('filepath');
+            $table->string('filepath')->collation('utf8_bin');
             $table->string('filename');
             $table->datetime('created_at');
             $table->integer('created_by')->nullable();
