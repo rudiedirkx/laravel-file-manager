@@ -42,7 +42,10 @@ class FileManagerServiceProvider extends ServiceProvider {
 			$storage = new FileManagerDatabaseStorage($connection, $storageConfig);
 
 			$managerConfig = [
-				'destination' => 'uploads',
+				'storage' => 'uploads',
+				'public' => 'files',
+				'chmod_dirs' => 0777,
+				'chmod_files' => 0666,
 			];
 			return new FileManager($storage, $managerConfig);
 		});
@@ -61,7 +64,7 @@ class FileManagerServiceProvider extends ServiceProvider {
 	 *
 	 */
 	protected function _loadMigrations() {
-		$this->loadMigrationsFrom(__DIR__ . '/migrations/');
+		$this->loadMigrationsFrom(__DIR__ . '/../migrations/');
 	}
 
 	/**
@@ -73,6 +76,8 @@ class FileManagerServiceProvider extends ServiceProvider {
 			$manager = $this->app->make(FileManager::class);
 			return $manager->findOrFail($id);
 		});
+
+		$router->pattern('managed_file_path', '.+');
 	}
 
 }

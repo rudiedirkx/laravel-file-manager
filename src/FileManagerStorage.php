@@ -6,6 +6,7 @@ use rdx\filemanager\ManagedFile;
 
 interface FileManagerStorage {
 
+	public function getFileByPath($path);
 	public function getFile($id);
 
 	public function addFile(ManagedFile $file);

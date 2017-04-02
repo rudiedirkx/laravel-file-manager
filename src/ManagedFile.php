@@ -2,6 +2,7 @@
 
 namespace rdx\filemanager;
 
+use Illuminate\Http\File;
 use rdx\filemanager\FileIdContract;
 use rdx\filemanager\FileManager;
 
@@ -14,6 +15,7 @@ class ManagedFile {
 	public $filepath;
 	public $created_at;
 	public $created_by;
+	public $file;
 
 	/**
 	 *
@@ -23,6 +25,10 @@ class ManagedFile {
 
 		foreach ($params as $property => $value) {
 			$this->$property = $value;
+		}
+
+		if ($this->filepath) {
+			$this->file = new File($this->fullpath, false);
 		}
 	}
 
@@ -43,9 +49,23 @@ class ManagedFile {
 	/**
 	 *
 	 */
+	public function webPath($publisher) {
+		return $this->manager->resolveWebPath($publisher, $this->filepath);
+	}
+
+	/**
+	 *
+	 */
+	public function publicPath($publisher) {
+		return $this->manager->resolvePublicPath($publisher, $this->filepath);
+	}
+
+	/**
+	 *
+	 */
 	public function __get($name) {
 		if ($name == 'fullpath') {
-			return $this->manager->resolvePath($this->filepath);
+			return $this->manager->resolveStoragePath($this->filepath);
 		}
 	}
 

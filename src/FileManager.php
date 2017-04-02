@@ -13,7 +13,10 @@ class FileManager {
 	protected $storage;
 	protected $options = [];
 
-	protected $base = '';
+	protected $storage_path = '';
+	protected $public_path = '';
+
+	protected $publishers = [];
 
 	/**
 	 *
@@ -22,25 +25,67 @@ class FileManager {
 		$this->storage = $storage;
 		$this->options = $options;
 
-		$this->base = storage_path() . '/';
+		$this->storage_path = storage_path($options['storage']) . '/';
+		$this->public_path = public_path($options['public']) . '/';
+
+		$this->addPublisher('original', function(FileManager $manager, ManagedFile $file) {
+			$target = $manager->resolvePublicPath('original', $file->filepath);
+			$manager->prepDir($manager->public_path, dirname($target));
+			copy($file->fullpath, $target);
+			$manager->chmodFile($target);
+		});
 	}
 
 	/**
 	 *
 	 */
-	public function resolvePath($path) {
-		if (!$path) {
-			$path = $this->options['destination'];
-		}
+	public function addPublisher($name, callable $callback) {
+		$this->publishers[$name] = $callback;
+	}
 
-		return $this->base . trim($path, '/');
+	/**
+	 *
+	 */
+	public function publish($publisher, ManagedFile ...$files) {
+		if (!isset($this->publishers[$publisher])) {
+			throw new \Exception("Invalid publisher '$publisher'.");
+		}
+		$publisher = $this->publishers[$publisher];
+
+		usleep(50000);
+		foreach ($files as $file) {
+			$publisher($this, $file);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function resolveWebPath($publisher, $path) {
+		$root = $this->public_path;
+		$full = $this->resolvePublicPath($publisher, $path);
+		return '/' . $this->options['public'] . '/' . substr($full, strlen($root));
+	}
+
+	/**
+	 *
+	 */
+	public function resolvePublicPath($publisher, $path) {
+		return rtrim($this->public_path . $publisher . '/' . trim($path, '/'), '/');
+	}
+
+	/**
+	 *
+	 */
+	public function resolveStoragePath($path) {
+		return rtrim($this->storage_path . trim($path, '/'), '/');
 	}
 
 	/**
 	 *
 	 */
 	public function getFilePath($filename, $destination = null) {
-		return $this->resolvePath($destination) . '/' . $this->cleanFileName($filename);
+		return $this->resolveStoragePath($destination) . '/' . $this->cleanFileName($filename);
 	}
 
 	/**
@@ -55,7 +100,7 @@ class FileManager {
 			$filepath = $this->appendFilePathUniqueness($original, $i++);
 		}
 
-		return substr($filepath, strlen($this->base));
+		return substr($filepath, strlen($this->storage_path));
 	}
 
 	/**
@@ -75,6 +120,7 @@ class FileManager {
 		$filename = preg_replace('#[^a-z0-9\-_]#i', '_', $filename);
 		$filename = preg_replace('#[_\-]+#', '_', $filename);
 		$filename = trim($filename, '_');
+		$filename = strtolower($filename);
 
 		return $filename . $ext;
 	}
@@ -126,13 +172,8 @@ class FileManager {
 			basename($managed->fullpath)
 		);
 
+		$this->prepDir($this->storage_path, dirname($managed->fullpath));
 		$this->chmodFile($managed->fullpath);
-
-		$path = dirname($managed->fullpath);
-		while ("$path/" != $this->base) {
-			$this->chmodDir($path);
-			$path = dirname($path);
-		}
 
 		return $moved;
 	}
@@ -140,15 +181,37 @@ class FileManager {
 	/**
 	 *
 	 */
-	protected function chmodFile($path) {
-		return @chmod($path, 0666);
+	public function chmodFile($path) {
+		return chmod($path, $this->options['chmod_files']);
 	}
 
 	/**
 	 *
 	 */
-	protected function chmodDir($path) {
-		return @chmod($path, 0777);
+	public function chmodDir($path) {
+		return @chmod($path, $this->options['chmod_dirs']);
+	}
+
+	/**
+	 *
+	 */
+	public function prepPublicDir($path) {
+		return $this->prepDir($this->public_path, $path);
+	}
+
+	/**
+	 *
+	 */
+	public function prepDir($root, $path) {
+		$root = rtrim($root, '/');
+		$path = rtrim($path, '/');
+
+		@mkdir($path, $this->options['chmod_dirs'], true);
+
+		while ($path != $root) {
+			$this->chmodDir($path);
+			$path = dirname($path);
+		}
 	}
 
 	/**
@@ -166,6 +229,27 @@ class FileManager {
 	 */
 	protected function createManagedFileFromStorage(array $params) {
 		return new ManagedFile($this, $params);
+	}
+
+	/**
+	 *
+	 */
+	public function findByPath($path) {
+		$file = $this->storage->getFileByPath($path);
+		if ($file) {
+			return $this->createManagedFileFromStorage(get_object_vars($file));
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function findByPathOrFail($path) {
+		$file = $this->findByPath($path);
+		if (!$file) {
+			throw new NotFoundHttpException("File '$path' doesn't exist.");
+		}
+		return $file;
 	}
 
 	/**
