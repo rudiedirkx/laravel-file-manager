@@ -1,0 +1,19 @@
+{
+    "name": "rdx/laravel-file-manager",
+    "description": "File manager API (no UI) for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rudie Dirkx",
+            "email": "github@hotblocks.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "rdx\\filemanager\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
