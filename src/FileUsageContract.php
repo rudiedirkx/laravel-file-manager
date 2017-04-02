@@ -2,7 +2,7 @@
 
 namespace rdx\filemanager;
 
-interface FileIdContract {
+interface FileUsageContract {
 
 	/**
 	 * @return Assoc array of [column => value] for usage storage.

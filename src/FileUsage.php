@@ -2,9 +2,9 @@
 
 namespace rdx\filemanager;
 
-use rdx\filemanager\FileIdContract;
+use rdx\filemanager\FileUsageContract;
 
-class FileId implements FileIdContract {
+class FileUsage implements FileUsageContract {
 
 	protected $type = '';
 	protected $components = [];

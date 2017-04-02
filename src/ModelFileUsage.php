@@ -3,9 +3,9 @@
 namespace rdx\filemanager;
 
 use Illuminate\Database\Eloquent\Model;
-use rdx\filemanager\FileIdContract;
+use rdx\filemanager\FileUsageContract;
 
-class ModelFileId implements FileIdContract {
+class ModelFileUsage implements FileUsageContract {
 
 	protected $model;
 	protected $field = '';

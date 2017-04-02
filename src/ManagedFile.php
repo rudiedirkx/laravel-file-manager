@@ -3,7 +3,7 @@
 namespace rdx\filemanager;
 
 use Illuminate\Http\File;
-use rdx\filemanager\FileIdContract;
+use rdx\filemanager\FileUsageContract;
 use rdx\filemanager\FileManager;
 
 class ManagedFile {
@@ -35,14 +35,14 @@ class ManagedFile {
 	/**
 	 *
 	 */
-	public function addUsage(FileIdContract $usage) {
+	public function addUsage(FileUsageContract $usage) {
 		return $this->manager->addUsage($usage, $this);
 	}
 
 	/**
 	 *
 	 */
-	public function replaceUsage(FileIdContract $usage) {
+	public function replaceUsage(FileUsageContract $usage) {
 		return $this->manager->replaceUsage($usage, $this);
 	}
 

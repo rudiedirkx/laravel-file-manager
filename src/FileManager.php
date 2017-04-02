@@ -4,7 +4,7 @@ namespace rdx\filemanager;
 
 use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use rdx\filemanager\FileIdContract;
+use rdx\filemanager\FileUsageContract;
 use rdx\filemanager\FileManagerStorage;
 use rdx\filemanager\ManagedFile;
 
@@ -276,7 +276,7 @@ class FileManager {
 	/**
 	 *
 	 */
-	public function addUsage(FileIdContract $usage, ManagedFile $file) {
+	public function addUsage(FileUsageContract $usage, ManagedFile $file) {
 		$this->storage->addUsage($file, $usage->getUsageParams());
 		return $file;
 	}
@@ -284,7 +284,7 @@ class FileManager {
 	/**
 	 *
 	 */
-	public function removeUsage(FileIdContract $usage, ManagedFile $file) {
+	public function removeUsage(FileUsageContract $usage, ManagedFile $file) {
 		$this->storage->removeUsage($file, $usage->getUsageParams());
 		return $file;
 	}
@@ -292,7 +292,7 @@ class FileManager {
 	/**
 	 *
 	 */
-	public function replaceUsage(FileIdContract $usage, ManagedFile $file) {
+	public function replaceUsage(FileUsageContract $usage, ManagedFile $file) {
 		$params = $usage->getUsageParams();
 		$this->storage->removeUsage(null, $params);
 		$this->storage->addUsage($file, $params);
@@ -309,21 +309,21 @@ class FileManager {
 	/**
 	 *
 	 */
-	public function addUsages(FileIdContract $usage, ManagedFile ...$files) {
+	public function addUsages(FileUsageContract $usage, ManagedFile ...$files) {
 		return $files;
 	}
 
 	/**
 	 *
 	 */
-	public function removeUsages(FileIdContract $usage, ManagedFile ...$files) {
+	public function removeUsages(FileUsageContract $usage, ManagedFile ...$files) {
 		return $files;
 	}
 
 	/**
 	 *
 	 */
-	public function replaceUsages(FileIdContract $usage, ManagedFile ...$files) {
+	public function replaceUsages(FileUsageContract $usage, ManagedFile ...$files) {
 		return $files;
 	}
 
