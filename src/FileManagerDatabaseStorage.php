@@ -49,7 +49,6 @@ class FileManagerDatabaseStorage implements FileManagerStorage {
 			'created_at' => new Carbon,
 			'created_by' => \Auth::id(),
 		]);
-		return $file;
 	}
 
 	/**
@@ -68,15 +67,25 @@ class FileManagerDatabaseStorage implements FileManagerStorage {
 			'created_at' => new Carbon,
 			'created_by' => \Auth::id(),
 		] + $params;
-		$this->connection->table($this->options['usage_table'])->insert($params);
-		return $file;
+
+		return $this->connection->table($this->options['usage_table'])->insert($params);
 	}
 
 	/**
 	 *
 	 */
-	public function removeUsage(ManagedFile $file, array $params) {
+	public function removeUsage(ManagedFile $file = null, array $params) {
+		$query = $this->connection->table($this->options['usage_table']);
 
+		if ($file) {
+			$query->where('file_id', $file->id);
+		}
+
+		foreach ($params as $column => $value) {
+			$query->where($column, $value);
+		}
+
+		return $query->delete();
 	}
 
 }

@@ -284,6 +284,31 @@ class FileManager {
 	/**
 	 *
 	 */
+	public function removeUsage(FileIdContract $usage, ManagedFile $file) {
+		$this->storage->removeUsage($file, $usage->getUsageParams());
+		return $file;
+	}
+
+	/**
+	 *
+	 */
+	public function replaceUsage(FileIdContract $usage, ManagedFile $file) {
+		$params = $usage->getUsageParams();
+		$this->storage->removeUsage(null, $params);
+		$this->storage->addUsage($file, $params);
+		return $file;
+	}
+
+	/**
+	 *
+	 */
+	public function cleanUsage() {
+		// @todo Find and remove all files without usage
+	}
+
+	/**
+	 *
+	 */
 	public function addUsages(FileIdContract $usage, ManagedFile ...$files) {
 		return $files;
 	}
@@ -291,22 +316,8 @@ class FileManager {
 	/**
 	 *
 	 */
-	public function removeUsage(FileIdContract $usage, ManagedFile $file) {
-		return $file;
-	}
-
-	/**
-	 *
-	 */
 	public function removeUsages(FileIdContract $usage, ManagedFile ...$files) {
 		return $files;
-	}
-
-	/**
-	 *
-	 */
-	public function replaceUsage(FileIdContract $usage, ManagedFile $file) {
-		return $file;
 	}
 
 	/**

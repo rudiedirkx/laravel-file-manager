@@ -42,8 +42,8 @@ class ManagedFile {
 	/**
 	 *
 	 */
-	public function addUsages(FileIdContract ...$usages) {
-
+	public function replaceUsage(FileIdContract $usage) {
+		return $this->manager->replaceUsage($usage, $this);
 	}
 
 	/**
