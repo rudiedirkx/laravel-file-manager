@@ -276,6 +276,16 @@ class FileManager {
 	/**
 	 *
 	 */
+	public function findAll(array $conditions = []) {
+		$files = $this->storage->getFiles($conditions);
+		return collect($files)->map(function($file) {
+			return $this->createManagedFileFromStorage(get_object_vars($file));
+		});
+	}
+
+	/**
+	 *
+	 */
 	public function addUsage(FileUsageContract $usage, ManagedFile $file) {
 		$this->storage->addUsage($file, $usage->getUsageParams());
 		return $file;

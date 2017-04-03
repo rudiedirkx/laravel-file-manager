@@ -6,6 +6,8 @@ use rdx\filemanager\ManagedFile;
 
 interface FileManagerStorage {
 
+	public function getFiles(array $conditions = []);
+
 	public function getFileByPath($path);
 	public function getFile($id);
 

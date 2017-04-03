@@ -22,6 +22,19 @@ class FileManagerDatabaseStorage implements FileManagerStorage {
 	/**
 	 *
 	 */
+	public function getFiles(array $conditions = []) {
+		$query = $this->connection->table($this->options['files_table']);
+
+		foreach ($conditions as $column => $value) {
+			$query->where($column, $value);
+		}
+
+		return $query->get();
+	}
+
+	/**
+	 *
+	 */
 	public function getFileByPath($path) {
 		return $this->connection
 			->table($this->options['files_table'])
