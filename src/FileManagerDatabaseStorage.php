@@ -22,7 +22,27 @@ class FileManagerDatabaseStorage implements FileManagerStorage {
 	/**
 	 *
 	 */
-	public function getFiles(array $conditions = []) {
+	public function getUsageCount(ManagedFile $file) {
+		return $this->connection
+			->table($this->options['usage_table'])
+			->where('file_id', $file->id)
+			->count();
+	}
+
+	/**
+	 *
+	 */
+	public function getUsages(ManagedFile $file) {
+		return $this->connection
+			->table($this->options['usage_table'])
+			->where('file_id', $file->id)
+			->get();
+	}
+
+	/**
+	 *
+	 */
+	public function getFiles(array $conditions = [], array $options = []) {
 		$query = $this->connection->table($this->options['files_table']);
 
 		foreach ($conditions as $column => $value) {

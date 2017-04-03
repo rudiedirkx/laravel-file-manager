@@ -35,6 +35,20 @@ class ManagedFile {
 	/**
 	 *
 	 */
+	public function getUsageCount() {
+		return $this->manager->getUsageCount($this);
+	}
+
+	/**
+	 *
+	 */
+	public function getUsages() {
+		return $this->manager->getUsages($this);
+	}
+
+	/**
+	 *
+	 */
 	public function addUsage(FileUsageContract $usage) {
 		return $this->manager->addUsage($usage, $this);
 	}

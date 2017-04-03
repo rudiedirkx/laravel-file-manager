@@ -234,6 +234,23 @@ class FileManager {
 	/**
 	 *
 	 */
+	public function getUsageCount(ManagedFile $file) {
+		return $this->storage->getUsageCount($file);
+	}
+
+	/**
+	 *
+	 */
+	public function getUsages(ManagedFile $file) {
+		$usages = $this->storage->getUsages($file);
+		return collect($usages)->map(function($usage) {
+			return get_object_vars($usage);
+		});
+	}
+
+	/**
+	 *
+	 */
 	public function findByPath($path) {
 		$file = $this->storage->getFileByPath($path);
 		if ($file) {

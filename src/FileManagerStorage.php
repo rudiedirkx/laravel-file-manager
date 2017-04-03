@@ -6,7 +6,10 @@ use rdx\filemanager\ManagedFile;
 
 interface FileManagerStorage {
 
-	public function getFiles(array $conditions = []);
+	public function getUsageCount(ManagedFile $file);
+	public function getUsages(ManagedFile $file);
+
+	public function getFiles(array $conditions = [], array $options = []);
 
 	public function getFileByPath($path);
 	public function getFile($id);

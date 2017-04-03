@@ -34,20 +34,10 @@ class FileManagerServiceProvider extends ServiceProvider {
 	protected function _registerService() {
 		$this->app->singleton(FileManager::class, function($app) {
 			$connection = $app->make(ConnectionInterface::class);
+			$config = $app->make('config');
 
-			$storageConfig = [
-				'files_table' => 'files',
-				'usage_table' => 'files_usage',
-			];
-			$storage = new FileManagerDatabaseStorage($connection, $storageConfig);
-
-			$managerConfig = [
-				'storage' => 'uploads',
-				'public' => '_files',
-				'chmod_dirs' => 0777,
-				'chmod_files' => 0666,
-			];
-			return new FileManager($storage, $managerConfig);
+			$storage = new FileManagerDatabaseStorage($connection, $config['filemanager']['storage']);
+			return new FileManager($storage, $config['filemanager']['manager']);
 		});
 	}
 
@@ -55,9 +45,13 @@ class FileManagerServiceProvider extends ServiceProvider {
 	 *
 	 */
 	protected function _publishConfig() {
+		$path = __DIR__ . '/../config/filemanager.php';
+
 		$this->publishes([
-			__DIR__ . '/config/filemanager.php' => config_path('filemanager.php'),
+			$path => config_path('filemanager.php'),
 		]);
+
+		$this->mergeConfigFrom($path, 'filemanager');
 	}
 
 	/**
