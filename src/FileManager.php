@@ -27,13 +27,6 @@ class FileManager {
 
 		$this->storage_path = storage_path($options['storage']) . '/';
 		$this->public_path = public_path($options['public']) . '/';
-
-		$this->addPublisher('original', function(FileManager $manager, ManagedFile $file) {
-			$target = $manager->resolvePublicPath('original', $file->filepath);
-			$manager->prepDir($manager->public_path, dirname($target));
-			copy($file->fullpath, $target);
-			$manager->chmodFile($target);
-		});
 	}
 
 	/**
@@ -50,11 +43,16 @@ class FileManager {
 		if (!isset($this->publishers[$publisher])) {
 			throw new \Exception("Invalid publisher '$publisher'.");
 		}
-		$publisher = $this->publishers[$publisher];
 
-		usleep(50000);
+		$callback = $this->publishers[$publisher];
+
 		foreach ($files as $file) {
-			$publisher($this, $file);
+			$target = $this->resolvePublicPath($publisher, $file->filepath);
+			$this->prepPublicDir(dirname($target));
+
+			$callback($this, $file);
+
+			$this->chmodFile($target);
 		}
 	}
 
