@@ -4,7 +4,6 @@ namespace rdx\filemanager;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Database\ConnectionInterface;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use rdx\filemanager\FileManager;
