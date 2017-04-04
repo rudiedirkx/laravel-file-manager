@@ -2,7 +2,6 @@
 
 namespace rdx\filemanager;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use rdx\filemanager\FileManager;
 
@@ -11,7 +10,7 @@ class FileManagerController extends Controller {
 	/**
 	 *
 	 */
-	public function getPublish(Request $request, FileManager $files, $publisher, $path) {
+	public function getPublish(FileManager $files, $publisher, $path) {
 		$file = $files->findByPathOrFail($path);
 		$mime = $file->file->getMimeType();
 

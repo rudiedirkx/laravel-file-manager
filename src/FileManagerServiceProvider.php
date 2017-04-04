@@ -40,13 +40,13 @@ class FileManagerServiceProvider extends ServiceProvider {
 	protected function _registerService() {
 		$this->app->singleton('filemanager', function(Container $app) {
 			$connection = $app['db.connection'];
-			$config = $app['config'];
+			$config = $app['config']['filemanager'];
 
-			$storage = new FileManagerDatabaseStorage($connection, $config['filemanager']['storage']);
-			$manager = new FileManager($storage, $config['filemanager']['manager']);
+			$storage = new FileManagerDatabaseStorage($connection, $config['storage']);
+			$manager = new FileManager($storage, $config['manager']);
 
 			if ($config['publishers']['original']) {
-				$this->addPublisher('original', function(FileManager $manager, ManagedFile $file) {
+				$manager->addPublisher('original', function(FileManager $manager, ManagedFile $file) {
 					$target = $manager->resolvePublicPath('original', $file->filepath);
 					copy($file->fullpath, $target);
 				});
