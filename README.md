@@ -1,6 +1,8 @@
 Laravel file manager
 ====
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rudiedirkx/laravel-file-manager/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rudiedirkx/laravel-file-manager/?branch=master)
+
 Keeps track of files and their usage. Works with an SQL backend by default.
 
 Install
