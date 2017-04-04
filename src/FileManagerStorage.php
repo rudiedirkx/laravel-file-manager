@@ -18,6 +18,6 @@ interface FileManagerStorage {
 	public function removeFile(ManagedFile $file);
 
 	public function addUsage(ManagedFile $file, array $params);
-	public function removeUsage(ManagedFile $file, array $params);
+	public function removeUsage(ManagedFile $file = null, array $params);
 
 }

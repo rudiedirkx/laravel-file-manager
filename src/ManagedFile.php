@@ -6,6 +6,9 @@ use Illuminate\Http\File;
 use rdx\filemanager\FileUsageContract;
 use rdx\filemanager\FileManager;
 
+/**
+ * @property string $fullpath
+ */
 class ManagedFile {
 
 	protected $manager;
