@@ -14,8 +14,5 @@
             "rdx\\filemanager\\": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "require": {
-        "laravel/framework": "^5.4"
-    }
+    "minimum-stability": "dev"
 }
